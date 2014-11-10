@@ -1,11 +1,16 @@
-<section class="main-section" ng-controller="toonController">
-    <div class="row main">
-        <div class="large-9 medium-9 columns">
-            <h4>{{ latestToon.title }} posted on 22-10-2014</h4>
-            <div class="flex-video widescreen vimeo">
-                <iframe id="video" width="640" height="480" frameborder="0" id="player" webkitAllowFullScreen mozallowfullscreen allowFullScreen
-                        title="YouTube video player" src="http://www.youtube.com/embed/{{ latestToon.url }}?enablejsapi=1"></iframe>
+<div ng-controller="toonController">
+    <section class="main-section">
+        <div class="row main">
+            <div class="large-12 medium-12 small-12 columns">
+                <h4>{{ newToon.title }} posted on 22-10-2014</h4>
+
+                <div class="flex-video widescreen vimeo">
+                    <iframe id="video" width="640" height="480" frameborder="0" id="player" webkitAllowFullScreen
+                            mozallowfullscreen allowFullScreen
+                            title="YouTube video player"
+                            src="http://www.youtube.com/embed/UkLfmrxmvmw?enablejsapi=1"></iframe>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</div>
