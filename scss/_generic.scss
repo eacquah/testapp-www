@@ -1,8 +1,9 @@
 @import url('http://fonts.googleapis.com/css?family=Open+Sans');
 @import url('http://fonts.googleapis.com/css?family=Bangers');
 
-body {
+html, body {
   font-family: 'Bangers', 'Open Sans', 'Helvetica';
+  background: #FFFFFF;
 }
 
 h1, h2, h3, h4 {
@@ -52,12 +53,17 @@ iframe[id^='twitter-widget-'] {
     // Sets the panel background color. Default: $panel-pg
   $bg:#FFFFFF,
     // Sets the panel padding amount. Default: $panel-padding
-  $padding:50px,
+  $padding:20px 20px 40px 20px,
     // Sets the font color based on the darkness of the bg & resets header line-heights for panels. Default: $panel-header-adjust
   $adjust:true
   );
+  border: none;
   min-height: 100%! important;
   text-align: center;
+}
+
+.slick-prev:before, .slick-next:before {
+  color:#000000 !important;
 }
 
 footer {

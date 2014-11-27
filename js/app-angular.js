@@ -18,7 +18,7 @@ myApp.config(function ($routeProvider, $compileProvider) {
         })
 
         // route for the about page
-        .when('/updates', {
+        .when('/news', {
             templateUrl: 'pages/news.html',
             controller: 'newsController'
         })
@@ -36,42 +36,95 @@ myApp.config(function ($routeProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
 });
 
-// create the controller and inject Angular's $scope
-myApp.controller('mainController', function ($scope, $http) {
-
-    // create a message to display in our view
-    $scope.message = 'Everyone come and see how good I look!';
-
+myApp.directive('slickSlider', function ($http) {
     $http.defaults.useXDomain = true;
+    return {
+        // Restrict it to be an attribute in this case.
+        restrict: 'A',
+        link: function ($scope, element, attrs) {
+            $http.get('http://lolgh.spacebarweb.com/api/comics').success(function (data) {
+                $scope.comics = data;
 
-    $http.get('http://lolgh.spacebarweb.com/api/comics').
-        success(function (data, status, headers, config) {
-            $scope.comics = data;
-        }).
-        error(function (data, status, headers, config) {
-            // error msg
-        });
+                $scope.$watch('comics', function () {
+                    $(element).slick({
+                        dots: false,
+                        autoplay: false,
+                        arrows: true,
+                        lazyLoad: "ondemand",
+                        infinite: false,
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                        //centerMode: true
+                        //adaptiveHeight: true
+                        //centerPadding: "60px"
+                        //fade: true
+                        //rtl: true
+                    });
+                });
+            });
+        }
+    }
 });
 
-myApp.controller('toonController', function ($scope, $http) {
-    // create a message to display in our view
-    $scope.message = 'Everyone come and see how good I look!';
+// create the controller and inject Angular's $scope
+myApp.controller('mainController', function ($scope, $timeout, $http) {
 
+    $scope.comicDir = 'http://lolgh.com/cms/content/lol_gh/';
+    $scope.comicStemUrl = 'http://lolgh.com/comic/';
+
+    $scope.concatenate = function(string1, string2) {
+        return string1 + string2;
+    }
+
+    $scope.facebookShare = function(title, img, url) {
+        window.plugins.socialsharing.shareViaFacebook(title, img, url, function() {console.log('share ok')}, function(errormsg){alert(errormsg)});
+    };
+    $scope.twitterShare = function(title, img, url) {
+        window.plugins.socialsharing.shareViaTwitter(title, img, url);
+    };
+    $scope.generalShare = function(title, img, url) {
+        window.plugins.socialsharing.share(title, img, url);
+    };
+});
+
+myApp.controller('toonController', function ($scope, $http, $sce) {
     $http.defaults.useXDomain = true;
 
     $http.get('http://lolgh.spacebarweb.com/api/toons').
         success(function (data, status, headers, config) {
             $scope.newToon = data[0];
+            $scope.newToon.fullUrl =  $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + $scope.newToon.url + "?enablejsapi=1&rel=0&showinfo=0&controls=0");
+            $scope.toonUrl = 'http://lolgh.com/toon/' + $scope.newToon.toonId;
+            $scope.toonImage = 'http://img.youtube.com/vi/' + $scope.newToon.url + '/mqdefault.jpg';
+        }).
+        error(function (data, status, headers, config) {
+            // error msg
+        });
+
+
+    $scope.facebookShare = function(title, img, url) {
+        window.plugins.socialsharing.shareViaFacebook(title, img, url, function() {console.log('share ok')}, function(errormsg){alert(errormsg)});
+    };
+    $scope.twitterShare = function(title, img, url) {
+        window.plugins.socialsharing.shareViaTwitter(title, img, url);
+    };
+    $scope.generalShare = function(title, img, url) {
+        window.plugins.socialsharing.share(title, img, url);
+    };
+});
+
+myApp.controller('newsController', function ($scope, $http) {
+
+    $http.defaults.useXDomain = true;
+
+    $http.get('http://lolgh.spacebarweb.com/api/twitter').
+        success(function (data, status, headers, config) {
+            $scope.tweets = data;
         }).
         error(function (data, status, headers, config) {
             // error msg
         });
 });
 
-myApp.controller('newsController', function ($scope) {
-    $scope.message = 'Look! I am an about page.';
-});
-
 myApp.controller('contactController', function ($scope) {
-    $scope.message = 'Contact us! JK. This is just a demo.';
 });
